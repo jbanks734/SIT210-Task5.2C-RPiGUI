@@ -1,6 +1,11 @@
 from gi.repository import Gtk
 import sys
 
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(12, GPIO.OUT)
+
 
 class MyWindow(Gtk.ApplicationWindow):
 
@@ -10,7 +15,7 @@ class MyWindow(Gtk.ApplicationWindow):
         self.set_border_width(20)
 
         # a new radiobutton with a label
-        button1 = Gtk.RadioButton(label="Button 1")
+        button1 = Gtk.RadioButton(label="red")
         # connect the signal "toggled" emitted by the radiobutton
         # with the callback function toggled_cb
         button1.connect("toggled", self.toggled_cb)
@@ -18,7 +23,7 @@ class MyWindow(Gtk.ApplicationWindow):
         # another radiobutton, in the same group as button1
         button2 = Gtk.RadioButton.new_from_widget(button1)
         # with label "Button 2"
-        button2.set_label("Button 2")
+        button2.set_label("green")
         # connect the signal "toggled" emitted by the radiobutton
         # with the callback function toggled_cb
         button2.connect("toggled", self.toggled_cb)
@@ -28,7 +33,7 @@ class MyWindow(Gtk.ApplicationWindow):
         # another radiobutton, in the same group as button1,
         # with label "Button 3"
         button3 = Gtk.RadioButton.new_with_label_from_widget(
-            button1, "Button 3")
+            button1, "blue")
         # connect the signal "toggled" emitted by the radiobutton
         # with the callback function toggled_cb
         button3.connect("toggled", self.toggled_cb)
@@ -44,18 +49,26 @@ class MyWindow(Gtk.ApplicationWindow):
         self.add(grid)
 
     # callback function
+
     def toggled_cb(self, button):
         # a string to describe the state of the button
         state = "unknown"
         # whenever the button is turned on, state is on
         if button.get_active():
-            state = "on"
-        # else state is off
+            if button.get_label() == "red":
+                print(button.get_label())
+                print("is Red")
+            elif button.get_label() == "blue":
+                print("is Blue")
+            else:
+                print("is Green")
+
+            # GPIO.output(12, GPIO.LOW)
+
         else:
             state = "off"
         # whenever the function is called (a button is turned on or off)
         # print on the terminal which button was turned on/off
-        print(button.get_label() + " was turned " + state)
 
 
 class MyApplication(Gtk.Application):
