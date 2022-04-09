@@ -51,24 +51,21 @@ class MyWindow(Gtk.ApplicationWindow):
     # callback function
 
     def toggled_cb(self, button):
-        # a string to describe the state of the button
-        state = "unknown"
-        # whenever the button is turned on, state is on
-        if button.get_active():
-            if button.get_label() == "red":
-                print(button.get_label())
-                print("is Red")
-            elif button.get_label() == "blue":
-                print("is Blue")
-            else:
-                print("is Green")
+        if button.get_label() == "red":
+            print(button.get_label())
+            print("is Red")
 
-            # GPIO.output(12, GPIO.LOW)
+            GPIO.output(12, GPIO.HIGH)
+
+        elif button.get_label() == "blue":
+            print(button.get_label())
+            print("is Blue")
+            GPIO.output(12, GPIO.LOW)
 
         else:
-            state = "off"
-        # whenever the function is called (a button is turned on or off)
-        # print on the terminal which button was turned on/off
+            print(button.get_label())
+            print("is Green")
+            GPIO.output(12, GPIO.LOW)
 
 
 class MyApplication(Gtk.Application):
