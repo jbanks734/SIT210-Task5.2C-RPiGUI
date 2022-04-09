@@ -14,29 +14,30 @@ GPIO.setup(22, GPIO.OUT)
 class MyWindow(Gtk.ApplicationWindow):
 
     def __init__(self, app):
-        Gtk.Window.__init__(self, title="RadioButton Example", application=app)
+        Gtk.Window.__init__(self, title="RPI GUI", application=app)
         self.set_default_size(250, 100)
         self.set_border_width(20)
 
-        button1 = Gtk.RadioButton(label="red")
+        button1 = Gtk.RadioButton(label="Red")
         button1.connect("toggled", self.switch_lights)
+        button1.set_active(False)
 
         button2 = Gtk.RadioButton.new_from_widget(button1)
-        button2.set_label("green")
+        button2.set_label("Green")
         button2.connect("toggled", self.switch_lights)
         button2.set_active(False)
 
         button3 = Gtk.RadioButton.new_with_label_from_widget(
-            button1, "blue")
+            button1, "Blue")
         button3.connect("toggled", self.switch_lights)
         button3.set_active(False)
 
         button4 = Gtk.RadioButton.new_with_label_from_widget(
             button1, "Off")
         button4.connect("toggled", self.switch_lights)
-        button4.set_active(False)
+        button4.set_active(True)
 
-        # Gred for buttons.
+        # GRed for buttons.
         grid = Gtk.Grid.new()
         grid.attach(button1, 0, 0, 1, 1)
         grid.attach(button2, 0, 1, 1, 1)
@@ -47,20 +48,20 @@ class MyWindow(Gtk.ApplicationWindow):
 
     # Function to toggle the lights
     def switch_lights(self, button):
-        if button.get_label() == "red":
+        if button.get_label() == "Red":
             print("Red")
             GPIO.output(18, GPIO.LOW)
             GPIO.output(22, GPIO.LOW)
             GPIO.output(12, GPIO.HIGH)
 
-        elif button.get_label() == "green":
+        elif button.get_label() == "Green":
             print("Green")
             GPIO.output(12, GPIO.LOW)
             GPIO.output(22, GPIO.LOW)
 
             GPIO.output(18, GPIO.HIGH)
 
-        elif button.get_label() == "blue":
+        elif button.get_label() == "Blue":
             print("Blue")
             GPIO.output(12, GPIO.LOW)
             GPIO.output(18, GPIO.LOW)
