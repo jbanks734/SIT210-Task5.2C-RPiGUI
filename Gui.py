@@ -1,10 +1,14 @@
+# Import everything for GTK
 from gi.repository import Gtk
 import sys
 
+# Import everything for the GPIO
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12, GPIO.OUT)
+GPIO.setup(18, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
 
 
 class MyWindow(Gtk.ApplicationWindow):
@@ -14,58 +18,59 @@ class MyWindow(Gtk.ApplicationWindow):
         self.set_default_size(250, 100)
         self.set_border_width(20)
 
-        # a new radiobutton with a label
         button1 = Gtk.RadioButton(label="red")
-        # connect the signal "toggled" emitted by the radiobutton
-        # with the callback function toggled_cb
-        button1.connect("toggled", self.toggled_cb)
+        button1.connect("toggled", self.switch_lights)
 
-        # another radiobutton, in the same group as button1
         button2 = Gtk.RadioButton.new_from_widget(button1)
-        # with label "Button 2"
         button2.set_label("green")
-        # connect the signal "toggled" emitted by the radiobutton
-        # with the callback function toggled_cb
-        button2.connect("toggled", self.toggled_cb)
-        # set button2 not active by default
+        button2.connect("toggled", self.switch_lights)
         button2.set_active(False)
 
-        # another radiobutton, in the same group as button1,
-        # with label "Button 3"
         button3 = Gtk.RadioButton.new_with_label_from_widget(
             button1, "blue")
-        # connect the signal "toggled" emitted by the radiobutton
-        # with the callback function toggled_cb
-        button3.connect("toggled", self.toggled_cb)
-        # set button3 not active by default
+        button3.connect("toggled", self.switch_lights)
         button3.set_active(False)
 
-        # a grid to place the buttons
+        button4 = Gtk.RadioButton.new_with_label_from_widget(
+            button1, "Off")
+        button4.connect("toggled", self.switch_lights)
+        button4.set_active(False)
+
+        # Gred for buttons.
         grid = Gtk.Grid.new()
         grid.attach(button1, 0, 0, 1, 1)
         grid.attach(button2, 0, 1, 1, 1)
         grid.attach(button3, 0, 2, 1, 1)
-        # add the grid to the window
+        grid.attach(button4, 0, 3, 1, 1)
+        # Grid in window.
         self.add(grid)
 
-    # callback function
-
-    def toggled_cb(self, button):
+    # Function to toggle the lights
+    def switch_lights(self, button):
         if button.get_label() == "red":
-            print(button.get_label())
-            print("is Red")
-
+            print("Red")
+            GPIO.output(18, GPIO.LOW)
+            GPIO.output(22, GPIO.LOW)
             GPIO.output(12, GPIO.HIGH)
 
-        elif button.get_label() == "blue":
-            print(button.get_label())
-            print("is Blue")
+        elif button.get_label() == "green":
+            print("Green")
             GPIO.output(12, GPIO.LOW)
+            GPIO.output(22, GPIO.LOW)
 
-        else:
-            print(button.get_label())
-            print("is Green")
+            GPIO.output(18, GPIO.HIGH)
+
+        elif button.get_label() == "blue":
+            print("Blue")
             GPIO.output(12, GPIO.LOW)
+            GPIO.output(18, GPIO.LOW)
+
+            GPIO.output(22, GPIO.HIGH)
+        else:
+            GPIO.output(12, GPIO.LOW)
+            GPIO.output(18, GPIO.LOW)
+            GPIO.output(22, GPIO.LOW)
+            print("Off")
 
 
 class MyApplication(Gtk.Application):
